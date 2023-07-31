@@ -2,13 +2,13 @@ import React, { useEffect, useState, useCallback } from 'react';
 
 type Callback = (isVisible: boolean) => void;
 
-const useMediaQuery = () => {
+export const useDocumentVisibility = () => {
   const [visible, setVisible] = useState<boolean>(true);
   const [count, setCount] = useState<number>(0);
 
   const onVisibilityChange = useCallback((callback: Callback) => {
     const listener = () => {
-      callback(!document.hidden);
+      callback(document.hidden);
     };
 
     document.addEventListener('visibilitychange', listener);
@@ -19,7 +19,7 @@ const useMediaQuery = () => {
   }, []);
 
   const handleVisibilityChange = () => {
-    if (!document.hidden) {
+    if (document.hidden) {
       setVisible(false);
       setCount((prevCount) => prevCount + 1);
     } else {
@@ -36,5 +36,3 @@ const useMediaQuery = () => {
 
   return { visible, count, onVisibilityChange };
 };
-
-export default useMediaQuery;

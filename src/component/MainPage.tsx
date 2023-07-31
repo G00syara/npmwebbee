@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import useDocumentVisibility from '../hooks/useDocumentVisibility';
+import { useDocumentVisibility } from '../hooks/useDocumentVisibility';
 import MediaQuery from './MediaQuery';
 
 const MainPage: React.FC = () => {
