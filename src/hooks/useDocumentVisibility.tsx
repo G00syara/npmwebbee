@@ -1,15 +1,29 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
+
+type Callback = (isVisible: boolean) => void;
 
 const useMediaQuery = () => {
-  const [isActive, setIsActive] = useState<boolean>(true);
+  const [visible, setVisible] = useState<boolean>(true);
   const [count, setCount] = useState<number>(0);
 
+  const onVisibilityChange = useCallback((callback: Callback) => {
+    const listener = () => {
+      callback(!document.hidden);
+    };
+
+    document.addEventListener('visibilitychange', listener);
+
+    return () => {
+      document.removeEventListener('visibilitychange', listener);
+    };
+  }, []);
+
   const handleVisibilityChange = () => {
-    if (document.hidden) {
-      setIsActive(false);
+    if (!document.hidden) {
+      setVisible(false);
       setCount((prevCount) => prevCount + 1);
     } else {
-      setIsActive(true);
+      setVisible(true);
     }
   };
 
@@ -20,7 +34,7 @@ const useMediaQuery = () => {
     };
   }, []);
 
-  return { isActive, count };
+  return { visible, count, onVisibilityChange };
 };
 
 export default useMediaQuery;
