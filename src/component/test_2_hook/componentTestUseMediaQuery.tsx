@@ -1,5 +1,5 @@
 import React from 'react';
-import MediaQuery from '../MediaQuery';
+import { MediaQuery } from '@goosyara/npm-react-responsive';
 
 export const Example = () => (
   <div>

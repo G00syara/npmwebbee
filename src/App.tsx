@@ -1,7 +1,6 @@
 import React from 'react';
-import MainPage from './component/MainPage';
-import MediaQuery from './component/MediaQuery';
-import { Example } from './component/secondHook/componentTestUseMediaQuery';
+import MainPage from './component/test_1_hook/testUseDocumentVisibility';
+import { Example } from './component/test_2_hook/componentTestUseMediaQuery';
 
 const App = () => {
   return (

@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
-import { useDocumentVisibility } from '../hooks/useDocumentVisibility';
-import MediaQuery from './MediaQuery';
+import { useDocumentVisibility } from '@goosyara/react-npm-visibility';
 
 const MainPage: React.FC = () => {
   const { count, visible, onVisibilityChange } = useDocumentVisibility();

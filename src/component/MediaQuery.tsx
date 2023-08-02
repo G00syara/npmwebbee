@@ -1,6 +1,5 @@
 import React from 'react';
-import { useMediaQuery } from '../hooks/useMediaQuery';
-import { Example } from './secondHook/testUseMediaQuery';
+import { useMediaQuery } from '@goosyara/npm-react-responsive';
 
 type ResolutionQuery = number | `${number}dppx`;
 

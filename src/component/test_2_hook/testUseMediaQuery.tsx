@@ -1,5 +1,5 @@
 import React from 'react';
-import { useMediaQuery } from '../../hooks/useMediaQuery';
+import { useMediaQuery } from '@goosyara/npm-react-responsive';
 
 export const Example = () => {
   const isDesktopOrLaptop = useMediaQuery({ query: '(min-width: 1224px)' });
