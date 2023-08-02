@@ -2,10 +2,12 @@ import React from 'react';
 import { useMediaQuery } from '../hooks/useMediaQuery';
 import { Example } from './secondHook/testUseMediaQuery';
 
+type ResolutionQuery = number | `${number}dppx`;
+
 interface MediaQueryProps {
   orientation?: 'portrait' | 'landscape';
-  minResolution?: number | `${number}dppx`;
-  maxResolution?: number | `${number}dppx`;
+  minResolution?: ResolutionQuery;
+  maxResolution?: ResolutionQuery;
   minWidth?: number;
   maxWidth?: number;
   minHeight?: number;
@@ -13,12 +15,16 @@ interface MediaQueryProps {
   children: React.ReactNode | ((matches: boolean) => React.ReactNode);
 }
 
-const formatMinResolutionQuery = (minResolution: number | `${number}dppx`) => {
-  if (typeof minResolution === 'number') {
-    return `(min-resolution: ${minResolution}dppx)`;
-  } else {
-    return `(min-resolution: ${minResolution})`;
-  }
+const formatMinResolutionQuery = (minResolution: ResolutionQuery) => {
+  return typeof minResolution === 'number'
+    ? `(min-resolution: ${minResolution}dppx)`
+    : `(min-resolution: ${minResolution})`;
+};
+
+const formatMaxResolutionQuery = (maxResolution: ResolutionQuery) => {
+  return typeof maxResolution === 'number'
+    ? `(min-resolution: ${maxResolution}dppx)`
+    : `(min-resolution: ${maxResolution})`;
 };
 
 const MediaQuery: React.FC<MediaQueryProps> = ({
@@ -34,7 +40,7 @@ const MediaQuery: React.FC<MediaQueryProps> = ({
   const query = [
     orientation ? `(orientation: ${orientation})` : '',
     minResolution ? formatMinResolutionQuery(minResolution) : '',
-    maxResolution ? `(max-resolution: ${maxResolution})` : '',
+    maxResolution ? formatMaxResolutionQuery(maxResolution) : '',
     minWidth ? `(min-width: ${minWidth}px)` : '',
     maxWidth ? `(max-width: ${maxWidth}px)` : '',
     minHeight ? `(min-height: ${minHeight}px)` : '',
