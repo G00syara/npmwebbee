@@ -1,38 +1,33 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
 type Callback = (isVisible: boolean) => void;
 
 export const useDocumentVisibility = () => {
   const [visible, setVisible] = useState<boolean>(true);
   const [count, setCount] = useState<number>(0);
+	const onVisibilityCallback = useRef<Callback[]>([]);
 
-  const onVisibilityChange = useCallback((callback: Callback) => {
-    const listener = () => {
-      callback(document.hidden);
-    };
-
-    document.addEventListener('visibilitychange', listener);
-
-    return () => {
-      document.removeEventListener('visibilitychange', listener);
-    };
-  }, []);
-
-  const handleVisibilityChange = () => {
-    if (document.hidden) {
-      setVisible(false);
-      setCount((prevCount) => prevCount + 1);
-    } else {
-      setVisible(true);
-    }
-  };
+	const onVisibilityChange = (callback: Callback) => {
+		onVisibilityCallback.current.push(callback);
+	};
 
   useEffect(() => {
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    return () => {
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-    };
-  }, []);
+		const handleVisibilityChange = (): void => {
+			setVisible(document.visibilityState === 'visible');
+			if (document.hidden) {
+        setCount((prevCount) => prevCount + 1);
+			}
+			onVisibilityCallback.current.forEach((callback) =>
+				callback(document.visibilityState === 'visible')
+			);
+		};
+
+		document.addEventListener('visibilitychange', handleVisibilityChange);
+
+		return () => {
+			document.removeEventListener( 'visibilitychange', handleVisibilityChange);
+		};
+	}, []);
 
   return { visible, count, onVisibilityChange };
 };

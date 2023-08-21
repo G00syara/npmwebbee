@@ -1,5 +1,5 @@
 import React from 'react';
-import { useMediaQuery } from '@goosyara/npm-react-responsive';
+import { useMediaQuery } from '../hooks/useMediaQuery';
 
 type ResolutionQuery = number | `${number}dppx`;
 
