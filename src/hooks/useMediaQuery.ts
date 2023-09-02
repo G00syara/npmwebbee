@@ -10,15 +10,15 @@ export const useMediaQuery = ({ query }: UseQueryType): boolean => {
   );
 
   useEffect(() => {
-    const MediaQueryHandle = () => {
+    const mediaQueryHandle = () => {
       setState(() => window.matchMedia(query).matches);
     };
 
     const mediaQueryList = window.matchMedia(query);
 
-    mediaQueryList.addEventListener('change', MediaQueryHandle);
+    mediaQueryList.addEventListener('change', mediaQueryHandle);
     return () => {
-      mediaQueryList.removeEventListener('change', MediaQueryHandle);
+      mediaQueryList.removeEventListener('change', mediaQueryHandle);
     };
   }, [query]);
   return state;

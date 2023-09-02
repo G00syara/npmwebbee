@@ -11,45 +11,44 @@ interface MediaQueryProps {
   maxWidth?: number;
   minHeight?: number;
   maxHeight?: number;
-  children: React.ReactNode | ((matches: boolean) => React.ReactNode);
+  children?: React.ReactNode | ((matches: boolean) => React.ReactNode);
 }
 
-const formatMinResolutionQuery = (minResolution: ResolutionQuery) => {
-  return typeof minResolution === 'number'
-    ? `(min-resolution: ${minResolution}dppx)`
-    : `(min-resolution: ${minResolution})`;
+const formatMaxMinResolutionQuery = (minResolution?: ResolutionQuery, maxResolution?: ResolutionQuery) => {
+  if (typeof minResolution === 'number') {
+    return `(min-resolution: ${minResolution}dppx)`;
+  }
+  if (typeof minResolution !== 'number') {
+    return `(min-resolution: ${minResolution})`;
+  }
+  if (typeof maxResolution === 'number') {
+    return `(max-resolution: ${maxResolution}dppx)`;
+  }
+  if (typeof maxResolution !== 'number') {
+    return `(min-resolution: ${maxResolution})`;
+  }
+  return '';
 };
 
-const formatMaxResolutionQuery = (maxResolution: ResolutionQuery) => {
-  return typeof maxResolution === 'number'
-    ? `(min-resolution: ${maxResolution}dppx)`
-    : `(min-resolution: ${maxResolution})`;
-};
+const dataToQuery = (props: MediaQueryProps) => {
+  const data: { [key in keyof MediaQueryProps]: (value: MediaQueryProps[key]) => string } = {
+    orientation: (value) => `(orientation: ${value})`,
+    minWidth: (value) => `(min-width: ${value}px)`,
+    maxWidth: (value) => `(max-width: ${value}px)`,
+    minHeight: (value) => `(min-height: ${value}px)`,
+    maxHeight: (value) => `(max-height: ${value}px)`,
+    minResolution: (value) => formatMaxMinResolutionQuery(value),
+    maxResolution: (value) => formatMaxMinResolutionQuery(value),
+  };
 
-const MediaQuery: React.FC<MediaQueryProps> = ({
-  orientation,
-  minResolution,
-  maxResolution,
-  minWidth,
-  maxWidth,
-  minHeight,
-  maxHeight,
-  children,
-}) => {
-  const query = [
-    orientation ? `(orientation: ${orientation})` : '',
-    minResolution ? formatMinResolutionQuery(minResolution) : '',
-    maxResolution ? formatMaxResolutionQuery(maxResolution) : '',
-    minWidth ? `(min-width: ${minWidth}px)` : '',
-    maxWidth ? `(max-width: ${maxWidth}px)` : '',
-    minHeight ? `(min-height: ${minHeight}px)` : '',
-    maxHeight ? `(max-height: ${maxHeight}px)` : '',
-  ]
-    .filter((q) => q !== '')
+  return Object.entries(props)
+    .filter((q) => !!q)
+    .map(([key, value]) => data[key as keyof MediaQueryProps]?.(value!))
     .join(' and ');
+};
 
-  const matches = useMediaQuery({ query });
-
+const MediaQuery: React.FC<MediaQueryProps> = ({ children, ...data }) => {
+  const matches = useMediaQuery({ query: dataToQuery(data) });
   return <>{typeof children === 'function' ? children(matches) : matches && children}</>;
 };
 
